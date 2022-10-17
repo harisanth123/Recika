@@ -21,4 +21,5 @@ urlpatterns = [
     path('play/<int:r_id>/',view=views.play,name="playss"),
     path('delete/<int:r_id>/',view=views.deleteRec,name="del"),
     path('search/',view=views.search,name="ser"),
+    path('profil/<str:username>/',view=views.prof,name="pro"),
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

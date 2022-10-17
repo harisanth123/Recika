@@ -28,4 +28,16 @@
             <br>
           </article>
     {% endfor  %}
+    {% for user in usr %}
+        <article class="media content-section">
+            <img class="rounded-cirlce article-img" src="{{ user.image.url }}" alt="">
+            <div class="media-body">
+              <div class="article-metadata">
+                
+              </div>
+              <h1><a class="mr-2" href="{% url 'pro' user.user %}">{{ user.user}}</a></h1>
+            </div>
+            <br>
+          </article>
+    {% endfor  %}
 {% endblock content %}

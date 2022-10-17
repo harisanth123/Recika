@@ -3,13 +3,17 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm
 from django.contrib.auth.decorators import login_required
+from .models import Profile
 
 
 def register(request):
     if request.method == "POST":
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            profile = Profile()
+            profile.user = user
+            profile.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account Successfully Created for {username} Login In Now!!!')
             return redirect('login')
@@ -32,7 +36,16 @@ def profile_update(request):
 
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
-            p_form.save()
+            if request.FILES.get("image")!=None :
+                uploaded_file = request.FILES["image"]
+                filename = request.user.username+'.'+uploaded_file.name.split('.')[-1]
+                file_path = 'media/profile_pics/'+filename
+                with open(file_path, 'wb+') as destination:
+                    for chunk in uploaded_file.chunks():
+                        destination.write(chunk)
+                profile = Profile.objects.get(user=request.user) 
+                profile.image = 'profile_pics/'+filename
+                profile.save()
             messages.success(request, f'Your account has been updated!')
             return redirect('profile')
 

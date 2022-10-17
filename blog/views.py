@@ -14,6 +14,7 @@ import json
 from .forms import RecipeCreationForm
 
 from django.contrib.auth.models import User
+from users.models import Profile
 
 
 
@@ -76,12 +77,19 @@ def addRecipeInstruction(request):
 
 def search(request):
     keyword = request.GET.get("keyword")
-    posts = Recipe.objects.filter(name__icontains=keyword)
+    posts = Recipe.objects.filter(name__icontains=keyword) #add .lower() with keywords to  make case insensitive
+    usr = Profile.objects.filter(user__username__icontains=keyword)
+    # profile = 
+    # for user in usr:
+
     print(posts)
-    context = {"posts":posts, "keyword":keyword}
+    context = {"posts":posts, "keyword":keyword,"usr":usr}
     return render(request,'blog/home.html',context)
 
-
+def prof(request,username):
+    user = User.objects.get(username=username)
+    context = {"user":user}
+    return render(request, 'blog/profil.html',context)
 
 def play(request,r_id):
     recipe = Recipe.objects.get(id=r_id)
